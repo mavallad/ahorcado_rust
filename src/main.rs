@@ -1,11 +1,12 @@
 mod graphics;
 
 #[macro_use] extern crate text_io;
+extern crate colored;
 use std::io::prelude::*;
 use std::io;
 use std::collections::HashSet;
 use std::env;
-
+use colored::*;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -27,7 +28,7 @@ fn play_game(secret: String) {
     while !finish {
         println!("INTENTOS: {}", attempts_left);
         println!("{}", graphics::paint(attempts_left));
-        println!("\n      {}\n", pattern_secret(&secret, &letters_found));
+        println!("\n      {}\n", pattern_secret(&secret, &letters_found).yellow().bold());
         print!("Letra: ");
         io::stdout().flush().ok().expect("No podemos limpiar la salida");
         let rc: Result<char, _> = try_read!();
@@ -38,15 +39,15 @@ fn play_game(secret: String) {
                 if secret_letters.contains(&new_char) {
                     letters_found.insert(new_char);
                     if letters_found == secret_letters {
-                        println!("CAMPEÓN: Has acertado la palabra secreta {}", secret);
+                        println!("CAMPEÓN: Has acertado la palabra secreta {}", secret.blue().bold());
                         println!("{}", graphics::paint(attempts_left));
                         finish = true;
                     }
                 } else {
-                    println!("ERROR. {} no está en la palabra", new_char);
+                    println!("ERROR. {} no está en la palabra", new_char.to_string().bold());
                     attempts_left -= 1;
                     if attempts_left == 0 {
-                        println!("{}", "HAS PERDIDO!");
+                        println!("{}", "HAS PERDIDO!".red());
                         println!("{}", graphics::paint(attempts_left));
                         println!("Has acabado tus intentos. La palabra secreta es: {}", secret);
                         finish = true;
