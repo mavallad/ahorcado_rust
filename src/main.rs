@@ -1,4 +1,5 @@
 mod graphics;
+mod sound;
 
 #[macro_use] extern crate text_io;
 extern crate colored;
@@ -30,7 +31,7 @@ fn play_game(secret: String) {
         println!("{}", graphics::paint(attempts_left));
         println!("\n      {}\n", pattern_secret(&secret, &letters_found).yellow().bold());
         print!("Letra: ");
-        io::stdout().flush().ok().expect("No podemos limpiar la salida");
+        flush_console();
         let rc: Result<char, _> = try_read!();
         clear_console();
         match rc {
@@ -41,6 +42,7 @@ fn play_game(secret: String) {
                     if letters_found == secret_letters {
                         println!("CAMPEÓN: Has acertado la palabra secreta {}", secret.blue().bold());
                         println!("{}", graphics::paint(attempts_left));
+                        sound::play_win();
                         finish = true;
                     }
                 } else {
@@ -50,6 +52,7 @@ fn play_game(secret: String) {
                         println!("{}", "HAS PERDIDO!".red());
                         println!("{}", graphics::paint(attempts_left));
                         println!("Has acabado tus intentos. La palabra secreta es: {}", secret);
+                        sound::play_lose();
                         finish = true;
                     }
                 }
@@ -93,4 +96,8 @@ fn uppercase(c: char) -> char {
 
 fn clear_console() {
     print!("{}[2J", 27 as char);
+}
+
+fn flush_console() {
+    io::stdout().flush().ok().expect("No podemos limpiar la salida");
 }

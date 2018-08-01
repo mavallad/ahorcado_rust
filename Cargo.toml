@@ -6,3 +6,4 @@ authors = ["Manuel Valladares Pernas <manuel.valladares@mirai.com>"]
 [dependencies]
 text_io = "0.1.7"
 colored = "1.6"
+rodio = "0.8.0"
